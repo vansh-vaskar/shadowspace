@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ShadowSpace</title>
+
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            font-family: Arial;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 60%;
+            margin: auto;
+        }
+
+        .form-box {
+            background: #1e1e1e;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        textarea, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            margin-top: 10px;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #ff4757;
+            color: white;
+            cursor: pointer;
+        }
+
+        .post {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .meta {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .like-btn {
+            background-color: #ff4757;
+            margin-top: 10px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1>👻 ShadowSpace</h1>
+
+    <div class="container">
+
+        <div class="form-box">
+            <form action="/add" method="POST">
+                <textarea name="content" placeholder="Write your confession..." required></textarea>
+
+                <select name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Love">Love ❤️</option>
+                    <option value="College">College 🎓</option>
+                    <option value="Stress">Stress 😩</option>
+                    <option value="Random">Random 🤷</option>
+                </select>
+
+                <button type="submit">Post</button>
+            </form>
+        </div>
+
+        {% for post in posts %}
+            <div class="post">
+                <div class="meta">
+                    {{ post[2] }} | {{ post[4] }}
+                </div>
+
+                <p>{{ post[1] }}</p>
+
+                <p>❤️ {{ post[3] }}</p>
+
+                <a href="/like/{{ post[0] }}">
+                    <button class="like-btn">Like</button>
+                </a>
+
+                <hr>
+
+                <!-- COMMENTS -->
+                <h4>Comments:</h4>
+
+                {% for comment in comments[post[0]] %}
+                    <p>💬 {{ comment[0] }}</p>
+                {% endfor %}
+
+                <!-- ADD COMMENT -->
+                <form action="/comment/{{ post[0] }}" method="POST">
+                    <input type="text" name="comment" placeholder="Write a comment..." required>
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+        {% endfor %}
+
+    </div>
+
+</body>
+</html>
