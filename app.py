@@ -1,11 +1,14 @@
 from flask import Flask, render_template, request, redirect
 import sqlite3
+import os
 
 app = Flask(__name__)
 
+DB_PATH = os.path.join(os.getcwd(), "database.db")
+
 # create database and table if not exists
 def init_db():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS posts (
@@ -31,7 +34,7 @@ init_db()
 
 @app.route('/')
 def home():
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("SELECT id, content, category, likes, mood FROM posts ORDER BY likes DESC")
@@ -61,7 +64,7 @@ def add_post():
     else:
         mood = 'Neutral 😐'
 
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute(
         "INSERT INTO posts (content, category, likes, mood) VALUES (?, ?, ?, ?)",
@@ -74,7 +77,7 @@ def add_post():
 
 @app.route('/like/<int:post_id>')
 def like(post_id):
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("UPDATE posts SET likes = likes + 1 WHERE id = ?", (post_id,))
@@ -88,7 +91,7 @@ def like(post_id):
 def add_comment(post_id):
     content = request.form['comment']
 
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute(
